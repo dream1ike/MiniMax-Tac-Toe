@@ -1,17 +1,18 @@
+import numpy as np
+
+
 class TicTacToeBoard:
-    def __init__(self, size_board: int, player1: int, player2: int):
+    def __init__(self, size_board: int):
         """
+        player1 - 0.01
+        player2 - 200
         :param size_board: board = size_board * size_board
-        :param player1:  what will the first player play with
-        :param player2: what will the second player play with
         """
         self.size_board = size_board
 
         # Fill board None
-        self.board = [[None for _ in range(size_board)] for _ in range(size_board)]
+        self.board = np.array([[None for _ in range(size_board)] for _ in range(size_board)])
 
-        self.player1 = player1
-        self.player2 = player2
         self.number_of_moves = 0
 
     # Ф-я которая делает ход на доску (подаем в нее (x,y,player) и она заполняет доску
@@ -24,11 +25,37 @@ class TicTacToeBoard:
         :return: 0 - can not fill, 1 - filled success
         """
         result = 0
-        if self.board[x][y] == None:
+        if self.board[x][y] is None:
             self.board[x][y] = player
             result = 1
         self.number_of_moves += 1
         return result
+
+    @staticmethod
+    def _find_single_equal_element(matrix):
+        matrix = np.array(matrix)
+
+        # Проверяем строки
+        for row in matrix:
+            if np.all(row == row[0]):
+                return row[0]
+
+        # Проверяем столбцы
+        for col in matrix.T:
+            if np.all(col == col[0]):
+                return col[0]
+
+        # Проверяем главную диагональ
+        main_diagonal_set = set(matrix[i, i] for i in range(min(matrix.shape)))
+        if len(main_diagonal_set) == 1:
+            return main_diagonal_set.pop()
+
+        # Проверяем побочную диагональ
+        secondary_diagonal_set = set(matrix[i, -i - 1] for i in range(min(matrix.shape)))
+        if len(secondary_diagonal_set) == 1:
+            return secondary_diagonal_set.pop()
+
+        return -1
 
     # Ф-я которая проверяет, выиграл ли кто-то (после size_board * 2 - 1 хода)
     def check_game_status(self):
@@ -36,9 +63,13 @@ class TicTacToeBoard:
         Check if someone's wins
         :return: -1 - continue, 0 - draw, 1 - player1 wins, 2 - player2 wins
         """
+        if self.number_of_moves > 4:
+            result = self._find_single_equal_element(self.board)
+            return result
+        else:
+            return -1
 
-    # Ф-я, которая возвращает доску
-    def get_board(self) -> list:
+    def get_board(self):
         """
         :return: board right now
         """
