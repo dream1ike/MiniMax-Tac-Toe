@@ -24,7 +24,9 @@ class TicTacToeBoard:
         :return: 0 - can not fill, 1 - filled success
         """
         result = 0
-        ...
+        if self.board[x][y] == None:
+            self.board[x][y] = player
+            result = 1
         self.number_of_moves += 1
         return result
 
@@ -40,3 +42,4 @@ class TicTacToeBoard:
         """
         :return: board right now
         """
+        return self.board
