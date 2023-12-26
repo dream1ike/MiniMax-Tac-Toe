@@ -4,8 +4,8 @@ import numpy as np
 class TicTacToeBoard:
     def __init__(self, size_board: int):
         """
-        player1 - 0.01
-        player2 - 200
+        player1 - 1
+        player2 - 2
         :param size_board: board = size_board * size_board
         """
         self.size_board = size_board
@@ -55,7 +55,11 @@ class TicTacToeBoard:
         if len(secondary_diagonal_set) == 1:
             return secondary_diagonal_set.pop()
 
-        return -1
+        # Если совпадений не найдено и в матрице нет None, возвращаем 0
+        if np.any(matrix == None):
+            return -1
+        else:
+            return 0
 
     # Ф-я которая проверяет, выиграл ли кто-то (после size_board * 2 - 1 хода)
     def check_game_status(self):
