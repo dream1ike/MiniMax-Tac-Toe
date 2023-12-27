@@ -51,45 +51,26 @@ class MiniMax:
         result = self._find_single_equal_element(board)
         return result
 
-    def minimax(self, board: np.array, depth: int, isMaximizing: bool):
+    def minimax(self, board, depth, maximizing_player):
         winner = self.check_game_status(board)
-        if winner != -1:
-            if winner == self.computer_player:
-                score = 1
-            else:
-                score = -1
-            return score, depth
-
-        if isMaximizing:
-            empty_cells = [(i, j) for i in range(self.size_board) for j in range(self.size_board) if
-                           board[i][j] is None]
-            best_score = float('-inf')
-            best_depth = float('-inf')
-            if empty_cells:
-                for i in range(len(empty_cells)):
-                    row, column = empty_cells[i]
-                    new_board = board.copy()
-                    new_board[row][column] = self.computer_player
-                    score, curr_depth = self.minimax(new_board, depth + 1, False)
-                    if best_score < score and best_depth < curr_depth:
-                        best_score = score
-                        best_depth = curr_depth
-            return best_score, best_depth
+        if winner == self.computer_player or winner == self.player:
+            return -1 if maximizing_player else 1
+        elif winner == 0:
+            return 0
+        scores = []
+        empty_cells = [(i, j) for i in range(self.size_board) for j in range(self.size_board) if
+                       board[i][j] is None]
+        for i, j in empty_cells:
+            board[i][j] = self.computer_player if maximizing_player else self.player
+            score = self.minimax(board, depth + 1, not maximizing_player)
+            scores.append(score)
+            board[i][j] = None
+        if maximizing_player:
+            max_score_index = scores.index(max(scores))
+            return scores[max_score_index]
         else:
-            empty_cells = [(i, j) for i in range(self.size_board) for j in range(self.size_board) if
-                           board[i][j] is None]
-            best_score = float('inf')
-            best_depth = float('-inf')
-            if empty_cells:
-                for i in range(len(empty_cells)):
-                    row, column = empty_cells[i]
-                    new_board = board.copy()
-                    new_board[row][column] = self.player
-                    score, curr_depth = self.minimax(new_board, depth + 1, True)
-                    if best_score > score and best_depth < curr_depth:
-                        best_score = score
-                        best_depth = curr_depth
-            return best_score, best_depth
+            min_score_index = scores.index(min(scores))
+            return scores[min_score_index]
 
     def calculate_best_move(self, board: np.array, size_board: int, player):
         """
@@ -106,9 +87,9 @@ class MiniMax:
         best_move = (None, None)
         for i in range(len(empty_cells)):
             row, column = empty_cells[i]
-            new_board = board.copy()
-            new_board[row][column] = player
-            score, _ = self.minimax(new_board, 1, False)
+            board[row][column] = player
+            score = self.minimax(board, 0, False)
+            board[row][column] = None
             if score > best_score:
                 best_score = score
                 best_move = (row, column)
