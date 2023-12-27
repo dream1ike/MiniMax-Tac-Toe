@@ -1,14 +1,16 @@
 import tkinter as tk
 import numpy as np
 from tkinter import messagebox
-from TicTacToeBoard import TicTacToeBoard
 
+from TicTacToeBoard import TicTacToeBoard
+from Brain import MiniMax
 
 class TicTacToeGUI:
     def __init__(self, size_board):
         self.size_board = size_board
         self.board = TicTacToeBoard(size_board)
         self.current_player = None
+        self.real_player = None
         self.computer_symbol = None  # Переменная для отслеживания символа, за который играет компьютер
 
         self.root = tk.Tk()
@@ -33,6 +35,7 @@ class TicTacToeGUI:
 
     def start_new_game(self):
         self.current_player = np.random.choice(["X", "O"])
+        self.real_player = self.current_player
         self.computer_symbol = "O" if self.current_player == "X" else "X"  # Устанавливаем символ компьютера
         messagebox.showinfo("New Game", f"You are playing as {self.current_player}")
         self.board = TicTacToeBoard(self.size_board)
@@ -74,8 +77,9 @@ class TicTacToeGUI:
             empty_cells = [(i, j) for i in range(self.size_board) for j in range(self.size_board) if
                            self.board.get_board()[i][j] is None]
             if empty_cells:
-                computer_move = np.random.choice(len(empty_cells))
-                row, col = empty_cells[computer_move]
+                # computer_move = np.random.choice(len(empty_cells))
+                mm = MiniMax(self.board.number_of_moves, self.real_player, self.computer_symbol)
+                row, col = mm.calculate_best_move(self.board.get_board(), self.size_board, self.current_player)
                 self.board.make_move(row, col, self.computer_symbol)
                 self.buttons[row][col].config(text=self.computer_symbol)
                 game_status = self.board.check_game_status()

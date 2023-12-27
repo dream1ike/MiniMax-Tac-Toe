@@ -65,7 +65,7 @@ class TicTacToeBoard:
     def check_game_status(self):
         """
         Check if someone's wins
-        :return: -1 - continue, 0 - draw, 1 - player1 wins, 2 - player2 wins
+        :return: -1 - continue, 0 - draw, player1 - player1 wins, player2 - player2 wins
         """
         if self.number_of_moves > 4:
             result = self._find_single_equal_element(self.board)
