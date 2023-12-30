@@ -56,7 +56,7 @@ class TicTacToeBoard:
             return secondary_diagonal_set.pop()
 
         # Если совпадений не найдено и в матрице нет None, возвращаем 0
-        if np.any(matrix == None):
+        if np.any(matrix is not None):
             return -1
         else:
             return 0
