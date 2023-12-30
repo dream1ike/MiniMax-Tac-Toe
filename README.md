@@ -27,10 +27,6 @@ Execute the following command to start the game:
 
 The project is in its early stages of development, so some lagging may occur.
 
-## Acknowledgments
-
-Thanks to my friend and fellow student reersoti for contributing to the project.
-
 ## Contact
 
 For questions and feedback, feel free to reach out to me via email: baydadaev.timur@gmail.com
