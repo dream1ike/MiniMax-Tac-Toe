@@ -82,6 +82,8 @@ class MiniMax:
         """
         empty_cells = [(i, j) for i in range(size_board) for j in range(size_board) if
                        board[i][j] is None]
+        if len(empty_cells) >= 9:
+            return 1, 1
         self.size_board = size_board
         best_score = float('-inf')
         best_move = (None, None)
